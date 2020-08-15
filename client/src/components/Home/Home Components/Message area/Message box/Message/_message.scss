@@ -1,0 +1,275 @@
+.message {
+  flex: 0 0 70%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  white-space: pre-wrap;
+
+  // @include respond-max($medium-600px) {
+  //   margin: 0;
+  //   // flex: 1;
+  // }
+
+  @include respond-max($larger-1000px) {
+    flex: 0 0 85%;
+  }
+
+  // @include respond-max($larger-850px) {
+  //   flex: 0 0 100%;
+  // }
+
+  &-status {
+    position: absolute;
+    bottom: 3px;
+    right: -15px;
+
+    @include respond-max($medium-600px) {
+      bottom: 10px;
+      right: -6px;
+    }
+  }
+
+  .status-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  &-content {
+    display: flex;
+    align-items: center;
+
+    & > *:not(:first-child) {
+      margin-right: 2rem;
+
+      @include respond-max($large-750px) {
+        margin-right: 0.7rem;
+      }
+    }
+  }
+
+  &:hover span:not(.message__reaction) {
+    visibility: visible;
+  }
+
+  &__body {
+    font-size: 1.5rem;
+    margin: 1px;
+    position: relative;
+
+    @include respond-max($medium-600px) {
+      margin: 2px 1rem;
+    }
+  }
+
+  &__text {
+    background-color: $secondary-color;
+    background-image: linear-gradient(
+      to right bottom,
+      $primary-color,
+      $primary-color-2
+    );
+    padding: 1rem;
+    color: $tertiary-color;
+  }
+
+  &__options img,
+  &__reactions img {
+    height: 2rem;
+    width: 2rem;
+  }
+  &__date {
+    color: $grey-color-lighter;
+    flex: 0 0 auto;
+  }
+
+  &__options,
+  &__reactions,
+  &__date {
+    visibility: hidden;
+    cursor: pointer;
+  }
+
+  &__reactions {
+    position: relative;
+  }
+
+  .react-checkbox {
+    display: none;
+  }
+
+  .react-checkbox:checked ~ .message__reaction {
+    visibility: visible;
+  }
+
+  // ? all reactions
+  &__reaction {
+    display: flex;
+    position: absolute;
+    background-color: $dim-white;
+    padding: 1rem;
+    border-radius: 2rem;
+    top: -6rem;
+    left: -12rem;
+    box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.3);
+
+    visibility: hidden;
+
+    & > *:not(:last-child) {
+      margin-right: 1rem;
+    }
+    img {
+      height: 3.5rem;
+      width: 3.5rem;
+    }
+  }
+
+  // ? reacted
+  &__reacted {
+    position: absolute;
+    bottom: -1rem;
+    right: 5rem;
+    padding: 2px 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: $dim-white;
+
+    cursor: pointer;
+    img {
+      height: 1.5rem;
+      width: 1.5rem;
+    }
+  }
+
+  &-media {
+    margin-top: 5px;
+    display: flex;
+  }
+
+  &-fig {
+    width: 100%;
+    height: 100%;
+
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+
+    &-more {
+      background-color: $grey-color;
+      color: white;
+      font-size: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  &-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  &-media-composite {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+    .message-fig {
+      width: 47%;
+      height: 10rem;
+      &:nth-child(1),
+      &:nth-child(2) {
+        margin-bottom: 7px;
+      }
+      // &:nth-child(1),
+      // &:nth-child(3) {
+      //   margin-right: 5px;
+      // }
+    }
+  }
+}
+
+.own-message {
+  margin-left: auto;
+
+  .message-content {
+    flex-direction: row-reverse;
+  }
+  .message__text {
+    border-radius: 20px 20px 0 20px;
+    background-color: $grey-color-light;
+  }
+  .message-media {
+    flex-direction: row-reverse;
+    margin-left: auto;
+  }
+  .message__body {
+    margin-left: 1.5rem;
+  }
+}
+
+.friend-message {
+  .message__body {
+    margin-right: 1.5rem;
+  }
+  .message__text {
+    border-radius: 20px 20px 20px 0;
+  }
+  .message-media {
+    flex-direction: row-reverse;
+    margin-right: auto;
+  }
+}
+
+.unread__messages-bar {
+  padding: 1rem;
+  width: 100%;
+  background-color: $grey-color-lighter;
+  text-align: center;
+  color: $tertiary-color;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  margin: 1rem 0;
+  border-radius: 5px;
+}
+
+.message-loading {
+  .message__text {
+    padding: 1.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 20px 20px 20px 0;
+    background-image: none;
+    background-color: grey;
+    width: 56px;
+    margin-right: auto;
+  }
+
+  span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: white;
+    display: inline-block;
+  }
+  span:nth-child(1),
+  span:nth-child(3) {
+    animation: dotAnimate 1s infinite;
+  }
+  span:nth-child(2) {
+    animation: dotAnimate 1.5s infinite;
+  }
+}
+@keyframes dotAnimate {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

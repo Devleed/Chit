@@ -1,0 +1,25 @@
+@import './base styles/variables';
+@import './base styles/mixins';
+@import './base styles/typography';
+@import './base styles/utilities';
+@import './base styles/base';
+
+@import '../Auth/auth';
+
+@import '../Home/home';
+@import '../Home/Navbar/navbar';
+
+@import '../Home/Home Components/About/_about.scss';
+@import '../Home/Home Components/Chatlist/_chatlist.scss';
+@import '../Home/Home Components/Settings/_settings.scss';
+@import '../Home/Home Components/User Info/_user-info.scss';
+
+@import '../Home/Home Components/Message area/_msg-area.scss';
+@import '../Home/Home Components/Message area/User Info/user-info';
+@import '../Home/Home Components/Message area/Message box/messages';
+@import '../Home/Home Components/Message area/Create message/create-msg';
+@import '../Home/Home Components/Message area/Message box/Message/message';
+@import '../Overlay loader/overlayloader';
+@import '../Alert Box/alert';
+@import '../Basic loader/basic-loader';
+@import '../Modal/modal';

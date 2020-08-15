@@ -1,0 +1,76 @@
+.create-msg {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-top: 1px solid $grey-color-lightest;
+  flex: 1;
+
+  .basic-icon {
+    margin-right: 2rem;
+  }
+
+  .image-figure {
+    position: relative;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 5px;
+    overflow: hidden;
+
+    span {
+      position: absolute;
+      padding: 5px;
+      border-radius: 10px;
+      display: inline-block;
+      background-color: $grey-color;
+      font-size: 1.2rem;
+      top: 5px;
+      right: 5px;
+      color: white;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .image-preview {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+
+    & > *:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+
+  .create-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .input-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .msg__input {
+    flex: 1;
+    border: 1px solid $grey-color-lightest;
+    padding: 1rem;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 1.5rem;
+    resize: none;
+    white-space: pre-line;
+
+    &:focus {
+      outline: none;
+    }
+  }
+  .msg__input + .basic-icon {
+    box-sizing: content-box;
+    padding: 0.6rem;
+    margin-left: 2rem;
+  }
+}

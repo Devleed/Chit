@@ -1,0 +1,29 @@
+// utilities
+.margin-bottom-small {
+  margin-bottom: 2rem;
+}
+.margin-bottom-medium {
+  margin-bottom: 4rem;
+}
+
+.basic-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+}
+
+.box-icon {
+  padding: 1rem;
+  box-sizing: content-box;
+
+  transition: all 0.2s;
+  border-radius: 10px;
+
+  &:hover {
+    background-color: $dim-white;
+  }
+}
+
+input[type='file'] {
+  display: none;
+}

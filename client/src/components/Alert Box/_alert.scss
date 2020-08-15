@@ -1,0 +1,28 @@
+.alert {
+  position: fixed;
+  top: 6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(29, 29, 29, 0.911);
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  z-index: 2000;
+  color: white;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+
+  width: 500px;
+
+  .basic-icon {
+    margin-right: 10px;
+  }
+
+  .alert-heading {
+    font-size: 1.6rem;
+    text-transform: capitalize;
+  }
+  .alert-message {
+    font-size: 1.2rem;
+  }
+}

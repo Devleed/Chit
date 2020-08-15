@@ -1,0 +1,27 @@
+{
+  "name": "chat-app-new",
+  "version": "1.0.0",
+  "description": "a basic chat application",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "client": "npm start --prefix client",
+    "client-install": "yarn add --prefix client",
+    "dev": "concurrently \"npm start\" \"npm run client\"",
+    "commit": "git add . && git commit -m 'initial' && git push origin master",
+    "deploy": "git push origin master && git push heroku master"
+  },
+  "author": "Muhammad Waleed",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.22.0",
+    "concurrently": "^5.2.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.26",
+    "nodemon": "^2.0.4",
+    "socket.io": "^2.3.0"
+  }
+}

@@ -1,0 +1,37 @@
+// * ===================================== MESSAGES
+.messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  // flex: 0 0 75%;
+  padding: 2rem 3rem;
+  // box-shadow: inset 0px 10px 5px #888, inset 0px -10px 5px #888;
+  position: relative;
+  flex: 10;
+  @include respond-max($medium-600px) {
+    padding: 1.5rem;
+  }
+
+  .by-date {
+    border-top: 1px solid $grey-color-lightest;
+    position: relative;
+    padding: 2rem 0 1rem 0;
+
+    .date {
+      position: absolute;
+      display: inline-block;
+      padding: 5px;
+      color: $grey-color;
+      top: -1.15rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #fff;
+    }
+
+    &-messages {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+}

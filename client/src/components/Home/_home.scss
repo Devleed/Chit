@@ -1,0 +1,48 @@
+.main {
+  height: 90vh;
+  display: flex;
+  background-color: #fff;
+  position: relative;
+
+  @include respond-max($medium-large-686px) {
+    display: block;
+    // overflow: hidden;
+  }
+
+  & > * {
+    @include respond-max($medium-large-686px) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: $tertiary-color;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  & > *:not(:last-child) {
+    border-right: 1px solid $grey-color-lightest;
+  }
+}
+
+.left-tab {
+  position: relative;
+  width: 30%;
+
+  @include respond-max($medium-large-686px) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: $tertiary-color;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.center-tab {
+  flex: 2;
+}
+
+.right-tab {
+  flex: 1;
+}

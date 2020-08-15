@@ -1,0 +1,14 @@
+// typography
+.secondary-heading {
+  text-transform: uppercase;
+  font-size: 2.6rem;
+  font-weight: 200;
+}
+.secondary-heading-blue {
+  color: $secondary-color;
+}
+.paragraph {
+  font-size: 1.2rem;
+  color: $grey-color-lightest;
+  line-height: 2rem;
+}
