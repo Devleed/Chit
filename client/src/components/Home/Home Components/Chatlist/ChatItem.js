@@ -44,24 +44,16 @@ const ChatItem = ({ item, callback }) => {
         getChatMessages(item.user._id, callback);
       }}
       key={item.user._id}>
-      {item.user.username === 'Waleed' ? (
-        <img
-          src={`${require(`../../../../images/admin.svg`)}`}
-          alt="admin avatar"
-          className="chats__img"
-        />
-      ) : (
-        <img
-          src={`${require(`../../../../images/${item.user.gender}-avatar.svg`)}`}
-          alt={`${item.user.gender} avatar`}
-          className="chats__img"
-        />
-      )}
+      <img src={item.user.avatar} alt="admin avatar" className="chats__img" />
       <div className="chats__user">
-        <p className="chats__name">{`${item.user.firstname} ${item.user.lastname}`}</p>
+        <p className="chats__name">
+          {item.user.firstname + ' ' + item.user.lastname}
+        </p>
         <span className="chats__message">
           {item.message.sentBy === state.auth.user._id ? 'you: ' : ' '}
-          {item.message.body}
+          {item.message.media && item.message.media.length
+            ? 'image'
+            : item.message.body}
         </span>
       </div>
       {unread ? <span className="unread__messages"></span> : null}

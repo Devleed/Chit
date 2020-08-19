@@ -8,17 +8,22 @@ const UserInfo = ({ showRightTab }) => {
   return (
     <div className="user">
       <img
-        src={require('../../../../../images/left-chevron.svg')}
+        src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828367/chat%20app/left-chevron_wadlp0.svg"
         className="basic-icon left-chevron box-icon"
         onClick={destroyChatMessages}
+        alt="left arrow"
       />
       <img
-        src={require(`../../../../../images/${state.chat.selectedChat.user.gender}-avatar.svg`)}
+        src={state.chat.selectedChat.user.avatar}
         alt=""
         className="chats__img"
       />
       <div className="user__info">
-        <p className="user__name">{`${state.chat.selectedChat.user.firstname} ${state.chat.selectedChat.user.lastname}`}</p>
+        <p className="user__name">
+          {state.chat.selectedChat.user.firstname +
+            ' ' +
+            state.chat.selectedChat.user.lastname}
+        </p>
         <span className="active-status">
           {/* {state.onlineUsers.includes(state.chat.selectedChat.user._id)
             ? 'online'
@@ -26,7 +31,7 @@ const UserInfo = ({ showRightTab }) => {
         </span>
       </div>
       <img
-        src={require('../../../../../images/info.svg')}
+        src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828367/chat%20app/info_daepbp.svg"
         alt="info"
         className="basic-icon box-icon"
         onClick={e =>

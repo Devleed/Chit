@@ -82,6 +82,7 @@
   }
   &__name {
     font-size: 1.6rem;
+    text-transform: capitalize;
 
     @include respond-max($large-750px) {
       font-size: 1.4rem;

@@ -12,9 +12,10 @@ const Modal = props => {
   return reactDOM.createPortal(
     <div
       className="modal"
-      onClick={() => {
-        props.setShowModal(false);
-      }}>
+      // onClick={() => {
+      //   props.setShowModal(false);
+      // }}
+    >
       {props.children}
     </div>,
     document.getElementById('modal')

@@ -15,6 +15,7 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
+  email: String,
   password: {
     type: String,
     required: true
@@ -24,10 +25,7 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now()
   },
-  avatar: {
-    type: String,
-    default: 'https://vectorified.com/images/empty-profile-picture-icon-14.png'
-  }
+  avatar: String
 });
 
 module.exports = User = mongoose.model('user', userSchema);

@@ -72,6 +72,7 @@ router.get('/chats', verifyToken, async (req, res) => {
           'user.gender': 1,
           'user._id': 1,
           'user.register_date': 1,
+          'user.avatar': 1,
           message: 1,
           _id: 0
         }
@@ -193,6 +194,7 @@ router.get('/:id', verifyToken, async (req, res) => {
           'user.register_date': 1,
           'user.username': 1,
           'user._id': 1,
+          'user.avatar': 1,
           _id: 0,
           messagesByDate: 1
         }

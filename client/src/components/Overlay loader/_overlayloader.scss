@@ -63,6 +63,8 @@
   top: 0;
   left: 0;
 
+  z-index: 5000;
+
   background-color: $overlay-color;
 }
 .loader {

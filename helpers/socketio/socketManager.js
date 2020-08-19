@@ -1,5 +1,5 @@
-const Message = require('../../models/Message');
 const cloudinary = require('cloudinary');
+const Message = require('../../models/Message');
 
 let onlineUsers = {};
 
@@ -26,15 +26,16 @@ module.exports = io => {
         let messageContent = {
           sender: socket.user._id,
           reciever,
-          body: messageData.textBody,
+          body: messageData.textBody || '',
           date: Date.now(),
           status: 1
+          // scrapedData: messageData.scrapedData
         };
         if (messageData.media) {
           const uploaded = await Promise.all(
             messageData.media.map(async item => {
               return await cloudinary.uploader.upload(item.url, {
-                folder: '/chat app/',
+                folder: './chat app/',
                 use_filename: 'true',
                 transformation: [
                   { height: 250, width: 250, gravity: 'auto' },
@@ -48,9 +49,15 @@ module.exports = io => {
         }
 
         // create and save message in database
-        const { body, sender, _id, date, status, media } = await new Message(
-          messageContent
-        ).save();
+        const {
+          body,
+          sender,
+          _id,
+          date,
+          status,
+          media
+          // scrapedData
+        } = await new Message(messageContent).save();
 
         let message = {
           sentBy: sender,
@@ -59,10 +66,12 @@ module.exports = io => {
           date,
           status,
           media
+          // scrapedData
         };
 
         // check if user's online
         if (onlineUsers.hasOwnProperty(reciever)) {
+          console.log('private message emittion from server');
           // send message
           onlineUsers[reciever].emit('private-message', message);
         }

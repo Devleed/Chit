@@ -141,8 +141,8 @@ const CreateMsg = () => {
         />
         <label htmlFor="msg-file-upload">
           <img
-            src={require('../../../../../images/photo.svg')}
-            alt="upload photo"
+            src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828370/chat%20app/photo_liowtl.svg"
+            alt="upload icon"
             className="basic-icon"
           />
         </label>
@@ -155,7 +155,7 @@ const CreateMsg = () => {
           onKeyUp={onKeyUp}
         />
         <img
-          src={require('../../../../../images/send.svg')}
+          src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828372/chat%20app/send_mbjv2l.svg"
           alt="send icon"
           className="basic-icon"
           onClick={e => sendMessageToUser()}

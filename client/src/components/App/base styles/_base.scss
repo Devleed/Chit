@@ -20,9 +20,9 @@ html {
 
 body {
   font-family: sans-serif;
-  background-image: linear-gradient(to right, $primary-color, $primary-color-2);
   min-height: 100vh;
   overflow-x: hidden;
+  background-color: $tertiary-color;
 
   @include respond-max($largest-1200px) {
     padding: 0;

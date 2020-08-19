@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Message from './Message';
 import { Context } from '../../../../context/chatContext';
 
@@ -21,7 +21,7 @@ const MessageBox = () => {
         setTyping(userTyping);
       });
     }
-  }, []);
+  }, [state.socket]);
 
   let unreadIndex = null;
   let unreadMessages = 0;

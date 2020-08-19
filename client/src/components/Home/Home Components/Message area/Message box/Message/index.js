@@ -1,5 +1,7 @@
-import React, { Fragment, useRef, useEffect } from 'react';
+import React, { Fragment, useRef, useEffect, useState } from 'react';
 import moment from 'moment';
+import Modal from '../../../../../Modal';
+import Carousel from '../../../../../Carousel';
 
 const Message = ({
   messages,
@@ -10,6 +12,9 @@ const Message = ({
 }) => {
   const unreadRef = useRef(null);
   const messageEndRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [clickedImage, setClickedImage] = useState(null);
+  const [selectedMedia, setSelectedMedia] = useState([]);
 
   const scrollToBottom = () => {
     if (messageEndRef.current) {
@@ -27,21 +32,34 @@ const Message = ({
     })();
   }, []);
 
+  const displayImage = (i, media) => {
+    setClickedImage(i);
+    setSelectedMedia(media);
+    setShowModal(true);
+  };
+
   const renderImages = media => {
-    let moreToShow;
+    let moreToShow,
+      mediaPreview = media;
+
     if (media.length > 4) {
-      let length = media.length;
-      media = media.slice(0, 3);
+      mediaPreview = media.slice(0, 3);
       moreToShow = (
-        <figure className="message-fig message-fig-more" key={length}>
-          {length - 3}+
+        <figure
+          className="message-fig message-fig-more"
+          key={media.length}
+          onClick={() => displayImage(3, media)}>
+          {media.length - 3}+
         </figure>
       );
     }
 
-    let finalArr = media.map((item, i) => {
+    let finalArr = mediaPreview.map((item, i) => {
       return (
-        <figure className="message-fig" key={i}>
+        <figure
+          className="message-fig"
+          key={i}
+          onClick={() => displayImage(i, media)}>
           <img src={item.url} alt={item.name} className="message-image" />
         </figure>
       );
@@ -56,28 +74,28 @@ const Message = ({
     if (status === 0) {
       return (
         <img
-          src={require('../../../../../../images/clock.svg')}
+          src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828360/chat%20app/clock_qqatzp.svg"
           className="status-icon"
         />
       );
     } else if (status === 1) {
       return (
         <img
-          src={require('../../../../../../images/single-tick.svg')}
+          src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828374/chat%20app/single-tick_cjvy2k.svg"
           className="status-icon"
         />
       );
     } else if (status === 2) {
       return (
         <img
-          src={require('../../../../../../images/double-tick-blue.svg')}
+          src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828362/chat%20app/double-tick-blue_v8fpcy.svg"
           className="status-icon"
         />
       );
     } else {
       return (
         <img
-          src={require('../../../../../../images/message-send-error.svg')}
+          src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828369/chat%20app/message-send-error_nfboqz.svg"
           className="status-icon"
         />
       );
@@ -107,7 +125,9 @@ const Message = ({
             }-message`}>
             <div className="message-content">
               <div className="message__body">
-                <p className="message__text">{message.body}</p>
+                {message.body && (
+                  <p className="message__text">{message.body}</p>
+                )}
                 {message.media && message.media.length !== 0 ? (
                   <div
                     className={`message-media ${
@@ -125,7 +145,7 @@ const Message = ({
                   />
                 </span>
               )}
-              <span className="message__reactions">
+              {/* <span className="message__reactions">
                 <input
                   type="checkbox"
                   id={`react-check-msg-${message._id}`}
@@ -165,7 +185,7 @@ const Message = ({
                     alt="angry react"
                   />
                 </span>
-              </span>
+              </span> */}
               <span className="message__date">
                 {moment(message.date).format('h:mm a')}
               </span>
@@ -187,6 +207,13 @@ const Message = ({
   };
   return (
     <Fragment>
+      <Modal show={showModal} setShowModal={setShowModal}>
+        <Carousel
+          data={selectedMedia}
+          defaultActiveIndex={clickedImage}
+          setShowModal={setShowModal}
+        />
+      </Modal>
       {renderMessages()}
       {typing && (
         <div className="message message-loading" ref={messageEndRef}>

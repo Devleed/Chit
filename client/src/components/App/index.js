@@ -13,6 +13,8 @@ const App = () => {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
 
+  console.clear();
+
   const finalCallback = response => {
     if (response.status !== 1) {
       setError('server error, ', response.payload);

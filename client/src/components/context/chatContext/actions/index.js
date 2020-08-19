@@ -1,3 +1,6 @@
+// import cheerio from 'cheerio';
+// import fetch from 'node-fetch';
+// import getUrls from 'get-urls';
 import API from '../../../../utils/api';
 import {
   SET_LOGGED_IN_USER,
@@ -7,19 +10,13 @@ import {
   LOGOUT_USER,
   SET_VISITED_USER,
   SET_CHAT_LIST,
-  UPDATE_CHAT_LIST,
-  REMOVE_FROM_CHAT_LIST,
   SET_SELECTED_CHAT,
   MESSAGE_SENDING,
   MESSAGE_SENT,
   MESSAGE_RECIEVED,
-  REMOVE_MESSAGE_FROM_SELECTED_CHAT,
   ADD_CONNECTION,
-  REMOVE_CONNECTION,
   SET_SOCKET,
   SET_SEARCH_RESULTS,
-  SET_ERROR,
-  CLEAR_ERROR,
   MESSAGE_READ,
   DESTROY_EVERY_THING,
   DESTROY_SELECTED_CHAT,
@@ -108,18 +105,11 @@ const loadUser = (state, dispatch) => {
 
 // ? register user
 const registerUser = (state, dispatch) => {
-  return async (body, cb) => {
-    try {
-      const { data } = await API.post('/auth/register', body);
-
-      setOnlineUser(state.socket, data, () => {
-        // update state
-        dispatch({ type: REGISTER_USER, payload: data });
-        cb({ status: 1, payload: data });
-      });
-    } catch (error) {
-      if (error.response) cb({ status: 0, payload: error.response.data });
-    }
+  return data => {
+    dispatch({
+      type: REGISTER_USER,
+      payload: { token: localStorage.getItem('auth-token'), user: data }
+    });
   };
 };
 
@@ -129,7 +119,9 @@ const loginUser = (state, dispatch) => {
     try {
       const { data } = await API.post('/auth/login', body);
 
-      setOnlineUser(state.socket, data, () => {
+      console.log(data);
+
+      setOnlineUser(state.socket, data.user, () => {
         dispatch({ type: LOGIN_USER, payload: data });
         cb({ status: 1, payload: data });
       });
@@ -180,6 +172,9 @@ const destroyChatMessages = (state, dispatch) => {
 // ? add message to selected chat
 const sendMessage = (state, dispatch) => {
   return (messageData, cb) => {
+    // scrape meta data
+    // const scrapedData = await scrapeMetaTags(messageData.textBody);
+
     // attach a unique message identifier
     messageData.identifier = Math.floor(Math.random() * 100000);
 
@@ -340,6 +335,36 @@ const setOnlineUsers = (state, dispatch) => {
     dispatch({ type: SET_ONLINE_USERS, payload: onlineUsers });
   };
 };
+
+// ? HELPERS
+// const scrapeMetaTags = text => {
+//   const urls = Array.from(getUrls(text));
+
+//   if (urls.length === 0) return {};
+
+//   const requests = urls.map(async url => {
+//     const res = await fetch(url);
+//     const html = await res.text();
+
+//     const $ = cheerio.load(html);
+
+//     const getMetaTag = name =>
+//       $(`meta[name=${name}]`).attr('content') ||
+//       $(`meta[property="og:${name}"]`).attr('content') ||
+//       $(`meta[property="twitter:${name}"]`).attr('content');
+
+//     return {
+//       url,
+//       title: $('title').first().text(),
+//       description: getMetaTag('description'),
+//       image: getMetaTag('image'),
+//       author: getMetaTag('author'),
+//       favicon: $('link[rel="shortcut icon"]').attr('content')
+//     };
+//   });
+
+//   return Promise.all(requests);
+// };
 
 export default {
   addUserToChatList,

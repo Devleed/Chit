@@ -1,27 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import API from '../../../utils/api';
 import validate from '../validator';
-import OverlayLoader from '../../Overlay loader';
-import Alert from '../../Alert Box';
+import FormPage1 from './FormPage1';
+import FormPage2 from './FormPage2';
+import FormPage3 from './FormPage3';
+import { Context } from '../../context/chatContext';
 
-const Register = ({ state, register, children }) => {
+const Register = ({ children }) => {
+  const { state, registerUser } = useContext(Context);
+
+  // * form page 1
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [gender, setGender] = useState('gender');
+  const [form1Loading, setForm1Loading] = useState(null);
+
+  // * form page 2
+  const [email, setEmail] = useState('');
+
+  // * form page 3
+  const [avatar, setAvatar] = useState(
+    'https://res.cloudinary.com/drhgwsxz0/image/upload/v1597672123/chat%20app/avatars/account_c1eqt0.svg'
+  );
+
   const [errors, setErrors] = useState({});
 
-  const [loading, setLoading] = useState(null);
+  const [formPage, setFormPage] = useState(0);
 
-  // useEffect(() => {
-  //   setErrors({ ...state.errors.register });
-  // }, [state.errors.register || state.errors]);
+  let form1Body = {
+    firstname,
+    lastname,
+    username,
+    password,
+    confirmPassword,
+    gender,
+    setFirstname,
+    setLastname,
+    setUsername,
+    setPassword,
+    setConfirmPassword,
+    setGender
+  };
+
+  let form2Body = {
+    email,
+    setEmail
+  };
 
   useEffect(() => {
     return () => {
       setErrors({});
-      setLoading(null);
+      setForm1Loading(null);
       setFirstname('');
       setLastname('');
       setUsername('');
@@ -31,161 +63,108 @@ const Register = ({ state, register, children }) => {
     };
   }, []);
 
-  const onSubmit = e => {
+  // * form 1
+  const onForm1Submit = async e => {
     e.preventDefault();
-    const body = {
-      firstname,
-      lastname,
-      username,
-      password,
-      confirmPassword,
-      gender
-    };
 
-    let formErrors = validate(body);
+    let formErrors = validate(form1Body);
 
     if (Object.keys(formErrors).length === 0) {
-      setLoading(true);
-      register(body, finalCallback);
+      setForm1Loading(true);
+      // register(form1Body, finalCallback);
+      try {
+        const { data } = await API.post('/auth/register', form1Body);
+
+        state.socket.emit('user-online', data.user, () => {
+          localStorage.setItem('auth-token', data.token);
+          setForm1Loading(false);
+          setFormPage(1);
+        });
+      } catch (error) {
+        setForm1Loading(false);
+        console.log(error.response);
+        if (error.response) setErrors({ ...error.response.data.register });
+      }
     } else setErrors(formErrors);
   };
 
-  const finalCallback = response => {
-    if (response.status !== 1) {
-      setErrors({ ...response.payload.register });
-      setLoading(false);
+  // * form 2
+  const onForm2Submit = async e => {
+    setForm1Loading(true);
+
+    e.preventDefault();
+
+    try {
+      console.log('sending req');
+      const { data } = await API.post(
+        '/user/set/email',
+        { email },
+        {
+          headers: {
+            'auth-token': localStorage.getItem('auth-token')
+          }
+        }
+      );
+
+      console.log(data);
+
+      setForm1Loading(false);
+      setFormPage(2);
+    } catch (error) {
+      if (error.response)
+        setErrors({ ...errors, server: error.response.data.msg });
     }
   };
 
-  return (
-    <form onSubmit={onSubmit} className="registration__form">
-      {errors.server ? (
-        <Alert heading="an error occured" message={errors.server} />
-      ) : null}
-      {loading ? <OverlayLoader /> : null}
-      <h3 className="secondary-heading secondary-heading-blue margin-bottom-small">
-        register
-      </h3>
-      <div className="registration__form--content">
-        <div className="form__group">
-          <label
-            htmlFor="firstname"
-            className={`form__label ${errors['firstname'] && 'error-label'}`}>
-            {errors['firstname'] || 'firstname'}
-          </label>
-          <input
-            type="text"
-            className="form__input"
-            id="firstname"
-            placeholder="john"
-            value={firstname}
-            onChange={e => setFirstname(e.target.value)}
-          />
-          <span className="focus-border"></span>
-        </div>
-        <div className="form__group">
-          <label
-            htmlFor="lastname"
-            className={`form__label ${errors['lastname'] && 'error-label'}`}>
-            {errors['lastname'] || 'lastname'}
-          </label>
-          <input
-            type="text"
-            className="form__input"
-            id="lastname"
-            placeholder="doe"
-            value={lastname}
-            onChange={e => setLastname(e.target.value)}
-          />
-          <span className="focus-border"></span>
-        </div>
-        <div className="form__group form__group-large">
-          <label
-            htmlFor="username"
-            className={`form__label ${errors['username'] && 'error-label'}`}>
-            {errors['username'] || 'username'}
-          </label>
-          <input
-            type="text"
-            className="form__input form__input"
-            id="username"
-            placeholder="john123"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-          />
-          <span className="focus-border"></span>
-        </div>
-        <div className="form__group">
-          <label
-            htmlFor="password"
-            className={`form__label ${errors['password'] && 'error-label'}`}>
-            {errors['password'] || 'password'}
-          </label>
-          <input
-            type="password"
-            className="form__input"
-            id="password"
-            placeholder="unique and hard to guess"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-          <span className="focus-border"></span>
-        </div>
-        <div className="form__group">
-          <label
-            htmlFor="confirm-password"
-            className={`form__label ${
-              errors['confirmPassword'] && 'error-label'
-            }`}>
-            {errors['confirmPassword'] || 'confirm password'}
-          </label>
-          <input
-            type="password"
-            className="form__input"
-            id="confirm-password"
-            placeholder="re-enter password"
-            value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
-          />
-          <span className="focus-border"></span>
-        </div>
-      </div>
-      <div className="form__group form__group-select">
-        <label
-          htmlFor="gender"
-          className={`form__label ${errors['gender'] && 'error-label'}`}>
-          {errors['gender'] || 'gender'}
-        </label>
-        <select
-          name="gender"
-          id="gender"
-          value={gender}
-          onChange={e => setGender(e.target.value)}>
-          <option value="gender" disabled>
-            gender
-          </option>
-          <option value="male" className="gender__option">
-            Male
-          </option>
-          <option value="female" className="gender__option">
-            Female
-          </option>
-          <option value="other" className="gender__option">
-            Other
-          </option>
-        </select>
-        <span className="focus-border"></span>
-      </div>
-      <div className="form__group form__group-checkbox">
-        <input type="checkbox" name="terms-checkbox" id="terms-checkbox" />
-        <label htmlFor="terms-checkbox">
-          i agree to <a href="#">terms and conditions</a>
-        </label>
-      </div>
-      <div className="form__group">{children}</div>
-      <button className="primary-btn">register</button>
-    </form>
-  );
+  // * form 3
+  const onForm3Submit = async e => {
+    setForm1Loading(true);
+
+    e.preventDefault();
+
+    try {
+      const { data } = await API.post(
+        '/user/set/avatar',
+        { avatar },
+        {
+          headers: {
+            'auth-token': localStorage.getItem('auth-token')
+          }
+        }
+      );
+
+      setForm1Loading(false);
+      registerUser(data);
+    } catch (error) {
+      if (error.response)
+        setErrors({ ...errors, server: error.response.data.msg });
+    }
+  };
+
+  const formPages = [
+    <FormPage1
+      onSubmit={onForm1Submit}
+      errors={errors}
+      body={form1Body}
+      loading={form1Loading}
+      switchAuth={children}
+      formPage={formPage}
+      setFormPage={setFormPage}
+    />,
+    <FormPage2
+      formPage={formPage}
+      setFormPage={setFormPage}
+      body={form2Body}
+      onSubmit={onForm2Submit}
+    />,
+    <FormPage3
+      defaultAvatar={avatar}
+      setAvatar={setAvatar}
+      onSubmit={onForm3Submit}
+    />
+  ];
+
+  return formPages[formPage];
 };
 
 export default Register;

@@ -25,7 +25,7 @@ const Home = () => {
     _setShortScreen(data);
   };
 
-  const { state, setOnlineUsers } = useContext(Context);
+  const { state } = useContext(Context);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -36,15 +36,6 @@ const Home = () => {
       }
     });
   }, [state.auth.user]);
-
-  useEffect(() => {
-    if (state.socket)
-      state.socket.on('online-users', users => {
-        setOnlineUsers(users);
-      });
-  }, []);
-
-  console.log(state);
 
   if (!state.auth.user) return null;
 

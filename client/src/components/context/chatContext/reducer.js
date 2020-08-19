@@ -8,14 +8,10 @@ import {
   SET_VISITED_USER,
   SET_CHAT_LIST,
   UPDATE_CHAT_LIST,
-  REMOVE_FROM_CHAT_LIST,
   SET_SELECTED_CHAT,
   MESSAGE_SENDING,
   MESSAGE_SENT,
   MESSAGE_RECIEVED,
-  REMOVE_MESSAGE_FROM_SELECTED_CHAT,
-  ADD_CONNECTION,
-  REMOVE_CONNECTION,
   SET_SOCKET,
   SET_SEARCH_RESULTS,
   SET_ERROR,
@@ -41,7 +37,8 @@ export default (state, { type, payload }) => {
       };
     case LOGIN_USER:
     case REGISTER_USER:
-      localStorage.setItem('auth-token', payload.token);
+      if (!localStorage.getItem('auth-token'))
+        localStorage.setItem('auth-token', payload.token);
       return {
         ...state,
         auth: {
@@ -242,7 +239,11 @@ const addMessageToChat = (chat, message) => {
       // if dates are equal then add message among that date messages
       if (messageByDate.date === messageDate) {
         change = true;
-        messageByDate.messages = [...messageByDate.messages, message];
+        if (
+          messageByDate.messages.findIndex(msg => msg._id === message._id) ===
+          -1
+        )
+          messageByDate.messages = [...messageByDate.messages, message];
       }
 
       return messageByDate;

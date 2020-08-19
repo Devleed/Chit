@@ -79,7 +79,7 @@ const Login = ({ state, login, children }) => {
           <span className="focus-border" />
         </div>
       </div>
-      <div className="form__group">{children}</div>
+      <div className="switch-auth">{children}</div>
       <button className="primary-btn" type="submit">
         login
       </button>

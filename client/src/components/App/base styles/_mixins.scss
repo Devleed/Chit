@@ -9,6 +9,7 @@
   text-transform: capitalize;
   cursor: pointer;
   transition: all 0.3s;
+  @content;
 
   &:hover {
     background-color: darken($main-color, 7);

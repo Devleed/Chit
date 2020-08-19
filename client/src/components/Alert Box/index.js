@@ -4,7 +4,7 @@ const Alert = ({ heading, message, type }) => {
   return (
     <div className="alert">
       <img
-        src={require('../../images/message-send-error.svg')}
+        src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828369/chat%20app/message-send-error_nfboqz.svg"
         className="basic-icon"
       />
       <div className="alert-text">

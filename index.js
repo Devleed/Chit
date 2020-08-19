@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const socketio = require('socket.io');
+const cloudinary = require('cloudinary');
 
 // * environment variables setup
 const dotenv = require('dotenv');
@@ -37,6 +38,14 @@ app.use(express.json());
 app.use('/auth', require('./routes/auth'));
 app.use('/message', require('./routes/message'));
 app.use('/user', require('./routes/user'));
+app.use('/assets', require('./routes/assets'));
+
+// * cloudinary setup
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
 
 // * mongodb setup
 mongoose
@@ -59,5 +68,5 @@ if (process.env.NODE_ENV === 'production') {
 
 // * test route
 app.get('/', (req, res) => {
-  res.send('test route');
+  res.json('workin');
 });

@@ -8,9 +8,7 @@ const Auth = () => {
   const { state, loginUser, registerUser } = useContext(Context);
 
   let authChild = (
-    <button
-      className="auth-change margin-bottom-small"
-      onClick={e => setLoginTab(!loginTab)}>
+    <button className="auth-change" onClick={e => setLoginTab(!loginTab)}>
       {loginTab ? 'create an account' : 'have an account'}
     </button>
   );

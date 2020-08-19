@@ -12,10 +12,11 @@ const messageSchema = new Schema({
     ref: 'user',
     required: true
   },
-  body: { type: String, required: true },
+  body: { type: String },
   date: { type: Number, default: Date.now() },
   status: { type: Number, default: 0 },
-  media: []
+  media: [],
+  scrapedData: Object
 });
 
 module.exports = Message = mongoose.model('message', messageSchema);

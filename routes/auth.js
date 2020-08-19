@@ -33,7 +33,8 @@ router.post('/register', async ({ body }, res) => {
     firstname: body.firstname,
     lastname: body.lastname,
     username: body.username,
-    gender: body.gender
+    gender: body.gender,
+    avatar: body.avatar
   };
 
   try {
@@ -54,7 +55,8 @@ router.post('/register', async ({ body }, res) => {
       lastname,
       username,
       gender,
-      register_date
+      register_date,
+      avatar
     } = await new User({
       ...userBody,
       password: hashedPassword
@@ -67,12 +69,13 @@ router.post('/register', async ({ body }, res) => {
     res.json({
       token,
       user: {
-        _id,
-        firstname: firstname,
-        lastname: lastname,
-        username: username,
-        gender: gender,
-        register_date: register_date
+        _id: id,
+        firstname,
+        lastname,
+        username,
+        gender,
+        register_date,
+        avatar
       }
     });
   } catch (error) {
@@ -121,10 +124,11 @@ router.post('/login', async (req, res) => {
         lastname: user.lastname,
         username: user.username,
         gender: user.gender,
+        avatar: user.avatar,
         register_date: user.register_date
       }
     });
-  } catch (err) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({ server: { msg: 'internal server error' } });
   }
