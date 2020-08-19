@@ -9,7 +9,7 @@ const UserInfo = ({ id, showRightTab }) => {
     (() => {
       visitedUser(id);
     })();
-  }, [id, visitedUser]);
+  }, [id]);
 
   if (!state.visitedUser) return null;
 
