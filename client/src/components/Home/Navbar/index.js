@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
-import axios from 'axios';
 import UserInfo from '../Home Components/User Info';
 import Alert from '../../Alert Box';
 import Settings from '../Home Components/Settings';
 import { Context } from '../../context/chatContext';
+import BasicLoader from '../../Basic loader';
 
 // const debounce = (fn, delay) => {
 //   let timer = null;
@@ -44,8 +44,10 @@ const Navbar = ({ showRightTab }) => {
   };
 
   const onKeyPress = e => {
-    setLoading(true);
-    if (e.which === 13) searchUser(searchValue, cancelToken, finalCallback);
+    if (e.which === 13) {
+      setLoading(true);
+      searchUser(searchValue, cancelToken, finalCallback);
+    }
   };
 
   // const search = debounce(function () {
@@ -63,7 +65,12 @@ const Navbar = ({ showRightTab }) => {
 
   const renderSearchResults = () => {
     if (searchValue === '') return null;
-    if (loading) return <p className="result_msg">loading...</p>;
+    if (loading)
+      return (
+        <div className="search-loader chats__item">
+          <BasicLoader />
+        </div>
+      );
     else if (state.searchResults) {
       if (state.searchResults.msg)
         return <p className="result_msg">{state.searchResults.msg}</p>;
