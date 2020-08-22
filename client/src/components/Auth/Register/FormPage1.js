@@ -92,6 +92,9 @@ const FormPage1 = ({ onSubmit, errors, body, loading, switchAuth }) => {
             placeholder="re-enter password"
             value={body.confirmPassword}
             onChange={e => body.setConfirmPassword(e.target.value)}
+            onKeyPress={e => {
+              if (e.which === 13) onSubmit(e);
+            }}
           />
           <span className="focus-border"></span>
         </div>

@@ -106,8 +106,6 @@ const Register = ({ children }) => {
         }
       );
 
-      console.log(data);
-
       setForm1Loading(false);
       setFormPage(2);
     } catch (error) {

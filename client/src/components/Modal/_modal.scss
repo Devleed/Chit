@@ -6,4 +6,20 @@
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.9);
+
+  &-content {
+    max-width: 70rem;
+    max-height: 70rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  &-close-icon {
+    position: absolute;
+    top: 2.5rem;
+    right: 2.5rem;
+    width: 2rem;
+    height: 2rem;
+  }
 }

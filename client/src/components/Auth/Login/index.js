@@ -75,6 +75,9 @@ const Login = ({ state, login, children }) => {
             placeholder="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
+            onKeyPress={e => {
+              if (e.which === 13) onSubmit(e);
+            }}
           />
           <span className="focus-border" />
         </div>

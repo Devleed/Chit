@@ -16,11 +16,11 @@ import {
   MESSAGE_RECIEVED,
   ADD_CONNECTION,
   SET_SOCKET,
-  SET_SEARCH_RESULTS,
   MESSAGE_READ,
   DESTROY_EVERY_THING,
   DESTROY_SELECTED_CHAT,
-  SET_ONLINE_USERS
+  SET_ONLINE_USERS,
+  UPDATE_AVATAR
 } from './actionTypes';
 
 const setOnlineUser = (socket, user, cb) => {
@@ -40,35 +40,6 @@ const visitedUser = (state, dispatch) => {
     }
   };
 };
-
-// ? search management
-const searchUser = ({ auth }, dispatch) => {
-  return async (val, cancelToken, cb) => {
-    try {
-      // axios config object
-      const config = {
-        headers: {
-          'auth-token': auth.token
-        }
-      };
-      if (cancelToken) config.cancelToken = cancelToken.token;
-
-      // send request and recieve response
-      const { data } = await API.get(`/user/search/${val}`, config);
-
-      // update the state
-      dispatch({ type: SET_SEARCH_RESULTS, payload: data });
-
-      // if request succeeded call callback and alert component
-      cb({ status: 1, payload: data });
-    } catch (error) {
-      console.error(error);
-      // if request failed call callback and alert component
-      cb({ status: 0, payload: error });
-    }
-  };
-};
-
 // ? load user
 const loadUser = (state, dispatch) => {
   return async cb => {
@@ -300,6 +271,27 @@ const addUserToChatList = (state, dispatch) => {
   };
 };
 
+const updateAvatar = (state, dispatch) => {
+  return async (avatar, cb) => {
+    try {
+      const { data } = await API.post(
+        '/user/set/avatar',
+        { avatar },
+        {
+          headers: {
+            'auth-token': state.auth.token
+          }
+        }
+      );
+      dispatch({ type: UPDATE_AVATAR, payload: data.avatar });
+      cb({ status: 1 });
+    } catch (error) {
+      console.error(error);
+      cb({ status: 1, payload: error });
+    }
+  };
+};
+
 // ! ? add connection
 const addConnection = (State, dispatch) => {
   return async (id, cb) => {
@@ -378,11 +370,11 @@ export default {
   getChatList,
   recieveMessage,
   setSocket,
-  searchUser,
   visitedUser,
   readMessage,
   messagesAreRead,
   destroyEverything,
   destroyChatMessages,
-  setOnlineUsers
+  setOnlineUsers,
+  updateAvatar
 };

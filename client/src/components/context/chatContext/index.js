@@ -15,7 +15,6 @@ const initialState = {
     chatList: [],
     selectedChat: null
   },
-  searchResults: null,
   onlineUsers: [],
   errors: {}
 };

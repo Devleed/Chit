@@ -19,7 +19,8 @@ import {
   MESSAGE_READ,
   DESTROY_EVERY_THING,
   DESTROY_SELECTED_CHAT,
-  SET_ONLINE_USERS
+  SET_ONLINE_USERS,
+  UPDATE_AVATAR
 } from './actions/actionTypes';
 
 export default (state, { type, payload }) => {
@@ -164,18 +165,32 @@ export default (state, { type, payload }) => {
         socket: payload
       };
 
-    // ? SEARCH REDUCERS
-    case SET_SEARCH_RESULTS:
-      return {
-        ...state,
-        searchResults: payload
-      };
-
     // ? VISITED USER REDUCER
     case SET_VISITED_USER:
       return {
         ...state,
         visitedUser: payload
+      };
+
+    case UPDATE_AVATAR:
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          user: {
+            ...state.auth.user,
+            avatar: payload
+          }
+        },
+        visitedUser: (() => {
+          if (
+            state.visitedUser &&
+            state.visitedUser._id === state.auth.user._id
+          ) {
+            return { ...state.visitedUser, avatar: payload };
+          }
+          return state.visitedUser;
+        })()
       };
 
     // ? ERROR REDUCERS
@@ -216,7 +231,6 @@ export default (state, { type, payload }) => {
           chatList: [],
           selectedChat: null
         },
-        searchResults: null,
         errors: {},
         onlineUsers: []
       };
@@ -239,11 +253,7 @@ const addMessageToChat = (chat, message) => {
       // if dates are equal then add message among that date messages
       if (messageByDate.date === messageDate) {
         change = true;
-        if (
-          messageByDate.messages.findIndex(msg => msg._id === message._id) ===
-          -1
-        )
-          messageByDate.messages = [...messageByDate.messages, message];
+        messageByDate.messages = [...messageByDate.messages, message];
       }
 
       return messageByDate;

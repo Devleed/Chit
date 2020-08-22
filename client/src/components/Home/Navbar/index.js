@@ -4,6 +4,7 @@ import Alert from '../../Alert Box';
 import Settings from '../Home Components/Settings';
 import { Context } from '../../context/chatContext';
 import BasicLoader from '../../Basic loader';
+import API from '../../../utils/api';
 
 // const debounce = (fn, delay) => {
 //   let timer = null;
@@ -19,7 +20,6 @@ import BasicLoader from '../../Basic loader';
 const Navbar = ({ showRightTab }) => {
   const {
     state,
-    searchUser,
     addUserToChatList,
     logoutUser,
     destroyEverything
@@ -27,7 +27,7 @@ const Navbar = ({ showRightTab }) => {
   const [searchValue, setSearchValue] = useState('');
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
-  let cancelToken;
+  const [searchUser, setSearchUser] = useState(null);
 
   useEffect(() => {
     return () => {
@@ -40,28 +40,27 @@ const Navbar = ({ showRightTab }) => {
     if (response.status !== 1) {
       setError(response.payload);
     }
-    setLoading(false);
   };
 
-  const onKeyPress = e => {
+  const onKeyPress = async e => {
     if (e.which === 13) {
       setLoading(true);
-      searchUser(searchValue, cancelToken, finalCallback);
+      // searchUser(searchValue, cancelToken, finalCallback);
+      // send request and recieve response
+      try {
+        const { data } = await API.get(`/user/search/${searchValue}`, {
+          headers: {
+            'auth-token': state.auth.token
+          }
+        });
+        setSearchUser(data);
+      } catch (error) {
+        setError(String(error));
+      } finally {
+        setLoading(false);
+      }
     }
   };
-
-  // const search = debounce(function () {
-  //   // if cancel token exists it means that request has been made before
-  //   if (typeof cancelToken != typeof undefined)
-  //     // so cancel the previous request
-  //     cancelToken.cancel('operation cancelled bcs of new request');
-
-  //   // assign cancel token
-  //   cancelToken = axios.CancelToken.source();
-
-  //   // call search function
-  //   searchUser(searchValue, cancelToken, setLoading);
-  // }, 1500);
 
   const renderSearchResults = () => {
     if (searchValue === '') return null;
@@ -71,19 +70,19 @@ const Navbar = ({ showRightTab }) => {
           <BasicLoader />
         </div>
       );
-    else if (state.searchResults) {
-      if (state.searchResults.msg)
-        return <p className="result_msg">{state.searchResults.msg}</p>;
+    else if (searchUser) {
+      if (searchUser.msg) return <p className="result_msg">{searchUser.msg}</p>;
       return (
         <li
           className="chats__item"
           onClick={e => {
             setSearchValue('');
-            addUserToChatList(state.searchResults._id, finalCallback);
+            addUserToChatList(searchUser._id, finalCallback);
+            setSearchUser(null);
           }}>
-          <img src={state.searchResults.avatar} alt="" className="chats__img" />
+          <img src={searchUser.avatar} alt="" className="chats__img" />
           <p className="chats__name">
-            {state.searchResults.firstname + ' ' + state.searchResults.lastname}
+            {searchUser.firstname + ' ' + searchUser.lastname}
           </p>
         </li>
       );
