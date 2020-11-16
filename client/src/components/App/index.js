@@ -30,8 +30,8 @@ const App = () => {
     setLoading(true);
 
     if (!state.socket) {
-      // const ENDPOINT = 'https://enigmatic-gorge-88521.herokuapp.com/';
-      const ENDPOINT = 'http://localhost:5000';
+      const ENDPOINT = 'https://enigmatic-gorge-88521.herokuapp.com/';
+      // const ENDPOINT = 'http://localhost:5000';
 
       const socket = io(ENDPOINT);
       setSocket(socket);
