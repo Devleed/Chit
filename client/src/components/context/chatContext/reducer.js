@@ -5,7 +5,6 @@ import {
   LOGIN_USER,
   REGISTER_USER,
   LOGOUT_USER,
-  SET_VISITED_USER,
   SET_CHAT_LIST,
   UPDATE_CHAT_LIST,
   SET_SELECTED_CHAT,
@@ -13,14 +12,14 @@ import {
   MESSAGE_SENT,
   MESSAGE_RECIEVED,
   SET_SOCKET,
-  SET_SEARCH_RESULTS,
   SET_ERROR,
   CLEAR_ERROR,
   MESSAGE_READ,
   DESTROY_EVERY_THING,
   DESTROY_SELECTED_CHAT,
   SET_ONLINE_USERS,
-  UPDATE_AVATAR
+  UPDATE_AVATAR,
+  SET_USER_LASTACTIVE
 } from './actions/actionTypes';
 
 export default (state, { type, payload }) => {
@@ -165,13 +164,6 @@ export default (state, { type, payload }) => {
         socket: payload
       };
 
-    // ? VISITED USER REDUCER
-    case SET_VISITED_USER:
-      return {
-        ...state,
-        visitedUser: payload
-      };
-
     case UPDATE_AVATAR:
       return {
         ...state,
@@ -181,16 +173,7 @@ export default (state, { type, payload }) => {
             ...state.auth.user,
             avatar: payload
           }
-        },
-        visitedUser: (() => {
-          if (
-            state.visitedUser &&
-            state.visitedUser._id === state.auth.user._id
-          ) {
-            return { ...state.visitedUser, avatar: payload };
-          }
-          return state.visitedUser;
-        })()
+        }
       };
 
     // ? ERROR REDUCERS
@@ -214,7 +197,7 @@ export default (state, { type, payload }) => {
     case SET_ONLINE_USERS:
       return {
         ...state,
-        onlineUsers: [...state.onlineUsers, ...payload]
+        onlineUsers: payload
       };
 
     case DESTROY_EVERY_THING:
@@ -226,13 +209,31 @@ export default (state, { type, payload }) => {
           user: null
         },
         socket: null,
-        visitedUser: null,
         chat: {
           chatList: [],
           selectedChat: null
         },
         errors: {},
         onlineUsers: []
+      };
+
+    case SET_USER_LASTACTIVE:
+      return {
+        ...state,
+        chat: {
+          ...state.chat,
+          selectedChat: (chat => {
+            if (chat) {
+              if (chat.user._id === payload._id)
+                return {
+                  ...chat,
+                  user: { ...chat.user, lastActive: payload.lastActive }
+                };
+              return chat;
+            }
+            return null;
+          })(state.chat.selectedChat)
+        }
       };
     default:
       return state;
@@ -253,7 +254,12 @@ const addMessageToChat = (chat, message) => {
       // if dates are equal then add message among that date messages
       if (messageByDate.date === messageDate) {
         change = true;
-        messageByDate.messages = [...messageByDate.messages, message];
+        const messageExist = messageByDate.messages.find(
+          msg => msg._id === message._id
+        );
+        console.log('this message already exists =>', messageExist);
+        if (!messageExist)
+          messageByDate.messages = [...messageByDate.messages, message];
       }
 
       return messageByDate;
@@ -275,6 +281,7 @@ const addMessageToChat = (chat, message) => {
       };
     }
   }
+  return chat;
 };
 
 const updateChatList = (list, selectedChat) => {

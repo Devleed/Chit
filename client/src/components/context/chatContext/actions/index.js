@@ -1,6 +1,3 @@
-// import cheerio from 'cheerio';
-// import fetch from 'node-fetch';
-// import getUrls from 'get-urls';
 import API from '../../../../utils/api';
 import {
   SET_LOGGED_IN_USER,
@@ -8,7 +5,6 @@ import {
   LOGIN_USER,
   REGISTER_USER,
   LOGOUT_USER,
-  SET_VISITED_USER,
   SET_CHAT_LIST,
   SET_SELECTED_CHAT,
   MESSAGE_SENDING,
@@ -20,26 +16,15 @@ import {
   DESTROY_EVERY_THING,
   DESTROY_SELECTED_CHAT,
   SET_ONLINE_USERS,
-  UPDATE_AVATAR
+  UPDATE_AVATAR,
+  SET_USER_LASTACTIVE
 } from './actionTypes';
 
+// ? helper to set online user
 const setOnlineUser = (socket, user, cb) => {
   socket.emit('user-online', user, cb);
 };
 
-// ? visited user
-const visitedUser = (state, dispatch) => {
-  return async id => {
-    if (id === state.auth.user._id)
-      dispatch({ type: SET_VISITED_USER, payload: state.auth.user });
-    else if (id === state.chat.selectedChat.user._id) {
-      dispatch({
-        type: SET_VISITED_USER,
-        payload: state.chat.selectedChat.user
-      });
-    }
-  };
-};
 // ? load user
 const loadUser = (state, dispatch) => {
   return async cb => {
@@ -59,6 +44,11 @@ const loadUser = (state, dispatch) => {
         };
         // send request and recieve response
         const { data } = await API.get('/auth/user', config);
+
+        if (!data) {
+          localStorage.removeItem('auth-token');
+          window.location.reload();
+        }
 
         setOnlineUser(state.socket, data, () => {
           dispatch({ type: SET_LOGGED_IN_USER, payload: data });
@@ -193,7 +183,6 @@ const sendMessage = (state, dispatch) => {
 // ? add message to selected chat
 const recieveMessage = (state, dispatch) => {
   return (message, cb) => {
-    console.log('recieve message action called');
     dispatch({ type: MESSAGE_RECIEVED, payload: message });
     cb();
   };
@@ -244,13 +233,12 @@ const getChatList = ({ auth }, dispatch) => {
 
       cb({ status: 1, payload: data });
     } catch (error) {
-      console.error(error);
-      cb({ status: 0, payload: error });
+      cb({ status: 0, payload: error.response.data });
     }
   };
 };
 
-// * add to chat list
+// ? add to chat list
 const addUserToChatList = (state, dispatch) => {
   return async (id, cb) => {
     try {
@@ -271,6 +259,7 @@ const addUserToChatList = (state, dispatch) => {
   };
 };
 
+// ? update avatar
 const updateAvatar = (state, dispatch) => {
   return async (avatar, cb) => {
     try {
@@ -284,11 +273,18 @@ const updateAvatar = (state, dispatch) => {
         }
       );
       dispatch({ type: UPDATE_AVATAR, payload: data.avatar });
-      cb({ status: 1 });
+      cb({ status: 1, payload: avatar });
     } catch (error) {
       console.error(error);
       cb({ status: 1, payload: error });
     }
+  };
+};
+
+// ? set user's last active
+const setUserLastactive = (state, dispatch) => {
+  return async user => {
+    dispatch({ type: SET_USER_LASTACTIVE, payload: user });
   };
 };
 
@@ -370,11 +366,11 @@ export default {
   getChatList,
   recieveMessage,
   setSocket,
-  visitedUser,
   readMessage,
   messagesAreRead,
   destroyEverything,
   destroyChatMessages,
   setOnlineUsers,
-  updateAvatar
+  updateAvatar,
+  setUserLastactive
 };

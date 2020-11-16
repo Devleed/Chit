@@ -19,16 +19,12 @@ const MessageArea = ({ showRightTab }) => {
   };
 
   useEffect(() => {
-    if (state.socket) {
-      state.socket.on('private-message', message => {
-        console.log('private message listened on client');
-        recieveMessage(message, () => getChatList(chatListCallback));
-      });
-      state.socket.on('message-read', date => {
-        console.log('the user just read your messages');
-        messagesAreRead(date);
-      });
-    }
+    state.socket.on('private-message', message => {
+      recieveMessage(message, () => getChatList(chatListCallback));
+    });
+    state.socket.on('message-read', date => {
+      messagesAreRead(date);
+    });
   }, []);
 
   return (

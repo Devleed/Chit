@@ -25,7 +25,8 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now()
   },
-  avatar: String
+  avatar: String,
+  lastActive: Number
 });
 
 module.exports = User = mongoose.model('user', userSchema);

@@ -12,6 +12,7 @@ import LeftTab from './Left tab';
 import { Context } from '../context/chatContext';
 
 const Home = () => {
+  const { state, setOnlineUsers } = useContext(Context);
   const [rightTab, setRightTab] = useState(null);
   const [messagesLoading, setMessagesLoading] = useState(null);
   const [shortScreen, _setShortScreen] = useState(
@@ -25,8 +26,6 @@ const Home = () => {
     _setShortScreen(data);
   };
 
-  const { state } = useContext(Context);
-
   useEffect(() => {
     window.addEventListener('resize', () => {
       if (window.innerWidth <= 686 && !shortScreenRef.current) {
@@ -35,7 +34,9 @@ const Home = () => {
         setShortScreen(false);
       }
     });
-  }, [state.auth.user]);
+  }, []);
+
+  console.log(state);
 
   if (!state.auth.user) return null;
 

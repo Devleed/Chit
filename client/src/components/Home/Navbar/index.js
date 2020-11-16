@@ -6,17 +6,6 @@ import { Context } from '../../context/chatContext';
 import BasicLoader from '../../Basic loader';
 import API from '../../../utils/api';
 
-// const debounce = (fn, delay) => {
-//   let timer = null;
-//   return function (...args) {
-//     const context = this;
-//     timer && clearTimeout(timer);
-//     timer = setTimeout(() => {
-//       fn.apply(context, args);
-//     }, delay);
-//   };
-// };
-
 const Navbar = ({ showRightTab }) => {
   const {
     state,
@@ -42,23 +31,25 @@ const Navbar = ({ showRightTab }) => {
     }
   };
 
+  const search = async () => {
+    try {
+      const { data } = await API.get(`/user/search/${searchValue}`, {
+        headers: {
+          'auth-token': state.auth.token
+        }
+      });
+      setSearchUser(data);
+    } catch (error) {
+      setError(String(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onKeyPress = async e => {
     if (e.which === 13) {
       setLoading(true);
-      // searchUser(searchValue, cancelToken, finalCallback);
-      // send request and recieve response
-      try {
-        const { data } = await API.get(`/user/search/${searchValue}`, {
-          headers: {
-            'auth-token': state.auth.token
-          }
-        });
-        setSearchUser(data);
-      } catch (error) {
-        setError(String(error));
-      } finally {
-        setLoading(false);
-      }
+      search();
     }
   };
 
@@ -109,7 +100,7 @@ const Navbar = ({ showRightTab }) => {
           src="https://res.cloudinary.com/drhgwsxz0/image/upload/v1597828372/chat%20app/search_cwnwnz.svg"
           alt="search icon"
           className="basic-icon"
-          onClick={e => searchUser(searchValue)}
+          onClick={search}
         />
         {searchValue !== '' ? (
           <div className="search__results">{renderSearchResults()}</div>

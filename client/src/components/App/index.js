@@ -9,11 +9,15 @@ import OverlayLoader from '../Overlay loader';
 import Alert from '../Alert Box';
 
 const App = () => {
-  const { state, loadUser, setSocket } = useContext(Context);
+  const {
+    state,
+    loadUser,
+    setSocket,
+    setOnlineUsers,
+    setUserLastactive
+  } = useContext(Context);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
-
-  console.clear();
 
   const finalCallback = response => {
     if (response.status !== 1) {
@@ -26,8 +30,8 @@ const App = () => {
     setLoading(true);
 
     if (!state.socket) {
-      const ENDPOINT = 'https://enigmatic-gorge-88521.herokuapp.com/';
-      // const ENDPOINT = 'http://localhost:5000';
+      // const ENDPOINT = 'https://enigmatic-gorge-88521.herokuapp.com/';
+      const ENDPOINT = 'http://localhost:5000';
 
       const socket = io(ENDPOINT);
       setSocket(socket);
@@ -35,6 +39,12 @@ const App = () => {
 
     if (state.socket) {
       loadUser(finalCallback);
+      state.socket.on('online-users', onlineUsers => {
+        setOnlineUsers(onlineUsers);
+      });
+      state.socket.on('user-lastActive', user => {
+        setUserLastactive(user);
+      });
     }
 
     return () => {
@@ -51,7 +61,6 @@ const App = () => {
       {!state.auth.isLoggedIn ? <Auth /> : <Home />}
     </Fragment>
   );
-  // return <Home />;
 };
 
 export default App;

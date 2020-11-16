@@ -1,5 +1,6 @@
 const cloudinary = require('cloudinary');
 const Message = require('../../models/Message');
+const User = require('../../models/User');
 
 let onlineUsers = {};
 
@@ -14,8 +15,18 @@ module.exports = io => {
       socket.emit('online-users', Object.keys(onlineUsers));
       cb();
     });
-    socket.on('user-offline', id => {
+    socket.on('user-offline', async id => {
       delete onlineUsers[id];
+
+      console.log('a user went offline');
+
+      const user = await User.findByIdAndUpdate(
+        id,
+        { $set: { lastActive: Date.now() } },
+        { new: true }
+      );
+
+      socket.broadcast.emit('user-lastActive', user);
       socket.broadcast.emit('online-users', Object.keys(onlineUsers));
       socket.emit('online-users', Object.keys(onlineUsers));
     });

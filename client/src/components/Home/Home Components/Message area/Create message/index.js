@@ -9,7 +9,7 @@ const CreateMsg = () => {
   const [error, setError] = useState(null);
   const [files, setFiles] = useState([]);
 
-  // * TEXTAREA ON CHANGE
+  // * FILE ON CHANGE
   const onChange = e => {
     if (e.target.files && e.target.files[0]) {
       Array.from(e.target.files).forEach(file => {

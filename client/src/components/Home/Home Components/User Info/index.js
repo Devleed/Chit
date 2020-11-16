@@ -3,20 +3,27 @@ import moment from 'moment';
 import { Context } from '../../../context/chatContext';
 import Modal from '../../../Modal';
 import AvatarSelect from '../../../Auth/Register/FormPage3';
+import Alert from '../../../Alert Box';
 
 const UserInfo = ({ id, showRightTab }) => {
-  const { state, visitedUser, updateAvatar } = useContext(Context);
+  const { state, updateAvatar } = useContext(Context);
   const [avatar, setAvatar] = useState(state.auth.user.avatar);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [visitedUser, setVisitedUser] = useState(null);
 
   useEffect(() => {
-    (() => {
-      visitedUser(id);
-    })();
+    if (id === state.auth.user._id) setVisitedUser(state.auth.user);
+    else if (id === state.chat.selectedChat.user._id) {
+      setVisitedUser(state.chat.selectedChat.user);
+    }
+
+    return () => {
+      setVisitedUser(null);
+    };
   }, [id]);
 
-  if (!state.visitedUser) return null;
+  if (!visitedUser) return null;
 
   const onSubmit = e => {
     e.preventDefault();
@@ -24,6 +31,8 @@ const UserInfo = ({ id, showRightTab }) => {
     updateAvatar(avatar, ({ status, payload }) => {
       if (status !== 1) {
         setError('an error occured' + String(payload));
+      } else if (status === 1 && state.auth.user._id === visitedUser._id) {
+        setVisitedUser({ ...visitedUser, avatar: payload });
       }
       setShowModal(false);
     });
@@ -31,6 +40,7 @@ const UserInfo = ({ id, showRightTab }) => {
 
   return (
     <div className="user-info">
+      {error && <Alert heading="try again later" message={error} />}
       {showModal ? (
         <Modal show={showModal} setShowModal={setShowModal}>
           <div className="modal-content">
@@ -56,11 +66,11 @@ const UserInfo = ({ id, showRightTab }) => {
       />
       <figure className="user-avatar">
         <img
-          src={state.visitedUser.avatar}
+          src={visitedUser.avatar}
           alt="female avatar"
           className="user__avatar margin-bottom-small"
         />
-        {state.auth.user._id === state.visitedUser._id && (
+        {state.auth.user._id === visitedUser._id && (
           <img
             src={require('../../../../images/camera.svg')}
             alt="camera icon"
@@ -70,10 +80,10 @@ const UserInfo = ({ id, showRightTab }) => {
         )}
       </figure>
       <h3 className="user__name">
-        {state.visitedUser.firstname + ' ' + state.visitedUser.lastname}
+        {visitedUser.firstname + ' ' + visitedUser.lastname}
       </h3>
       <span className="user__register-date">
-        Joined on {moment(state.visitedUser.register_date).format('ll')}
+        Joined on {moment(visitedUser.register_date).format('ll')}
       </span>
     </div>
   );

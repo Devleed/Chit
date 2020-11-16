@@ -44,7 +44,12 @@ const ChatItem = ({ item, callback }) => {
         getChatMessages(item.user._id, callback);
       }}
       key={item.user._id}>
-      <img src={item.user.avatar} alt="admin avatar" className="chats__img" />
+      <figure className="chats__figure">
+        <img src={item.user.avatar} alt="user avatar" className="chats__img" />
+        {state.onlineUsers.includes(item.user._id) && (
+          <span className="online-alert"></span>
+        )}
+      </figure>
       <div className="chats__user">
         <p className="chats__name">
           {item.user.firstname + ' ' + item.user.lastname}

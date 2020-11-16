@@ -17,7 +17,6 @@
   }
 
   span {
-    color: $grey-color;
     display: inline-block;
   }
 
@@ -46,10 +45,13 @@
     }
 
     &-unread {
-      span {
+      .chats__message {
         color: $primary-color;
         font-weight: 700;
       }
+      // .chats__date {
+      //   background-color: $primary-color;
+      // }
     }
 
     .unread__messages {
@@ -88,6 +90,17 @@
       font-size: 1.4rem;
     }
   }
+  // &__date {
+  //   background-color: $grey-color;
+  //   padding: 4px;
+  //   border-radius: 5px;
+  //   font-size: 1rem;
+  //   text-transform: uppercase;
+  //   color: $tertiary-color;
+  // }
+  &__date {
+    color: $grey-color;
+  }
   &__date,
   &__message {
     font-size: 1.2rem;
@@ -98,5 +111,19 @@
   &__message {
     color: $grey-color;
     width: 90%;
+  }
+  &__figure {
+    position: relative;
+
+    .online-alert {
+      width: 1.2rem;
+      height: 1.2rem;
+      background-color: #14d814;
+      // border: 0.5px solid #fff;
+      border-radius: 10px;
+      position: absolute;
+      bottom: 0;
+      right: 8px;
+    }
   }
 }

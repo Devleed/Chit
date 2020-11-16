@@ -6,8 +6,8 @@ export const SET_LOGGED_IN_USER = 'set_logged_in_user';
 export const SET_LOGGED_IN_USER_FAIL = 'set_logged_in_user_fail';
 
 // user
-export const SET_VISITED_USER = 'set_visited_user';
 export const UPDATE_AVATAR = 'update_avatar';
+export const SET_USER_LASTACTIVE = 'set_user_lastactive';
 
 // chat
 export const SET_CHAT_LIST = 'set_chat_list';

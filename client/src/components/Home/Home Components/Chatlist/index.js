@@ -26,6 +26,8 @@ const ChatList = () => {
     };
   }, []);
 
+  console.log('errpr => ', error);
+
   const renderChatItem = () => {
     // map through each chat item
     return state.chat.chatList.sort(sortChatList).map((item, i) => {
