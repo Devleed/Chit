@@ -16,7 +16,7 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, auth-token'
+    'Origin, X-Requested-With, Content-Type, Accept, auth-token',
   );
   next();
 });
@@ -44,7 +44,7 @@ app.use('/assets', require('./routes/assets'));
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET
+  api_secret: process.env.API_SECRET,
 });
 
 // * mongodb setup
@@ -53,7 +53,7 @@ mongoose
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
   })
   .then(() => console.log('database connected'))
   .catch(e => console.log(`error => ${e}`));
